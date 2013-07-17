@@ -212,11 +212,51 @@ public class ShowDialogMenuActionPhone extends FBAndroidAction
                     ZLApplication.Instance().runAction(ActionCode.SET_SCREEN_ORIENTATION_PORTRAIT);
                 }
             }
+            
+            @Override
+            public boolean canPreviousNavigation()
+            {
+                // TODO Auto-generated method stub
+                return false;
+            }
+            
+            @Override
+            public void previousNavigation()
+            {
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public boolean canNextNavigation()
+            {
+                // TODO Auto-generated method stub
+                return false;
+            }
+            
+            @Override
+            public void nextNavigation()
+            {
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public boolean canPreviousPage()
+            {
+                return true;
+            }
 
             @Override
             public void previousPage()
             {
                 ZLApplication.Instance().runAction(ActionCode.TURN_PAGE_BACK);
+            }
+            
+            @Override
+            public boolean canNextPage()
+            {
+                return true;
             }
 
             @Override
