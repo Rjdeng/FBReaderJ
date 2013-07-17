@@ -35,9 +35,13 @@ class SearchAction extends FBAndroidAction {
 
 	@Override
 	protected void run(Object ... params) {
-//		BaseActivity.onSearchRequested();
+	    String query = null;
+		if (params.length != 0) {
+		    query = params[0].toString();
+		    mFBReader.doSearch(query);
+		} else {
+		    BaseActivity.onSearchRequested();
+		}
 		
-		String query = params[0].toString();
-		mFBReader.doSearch(query);
 	}
 }

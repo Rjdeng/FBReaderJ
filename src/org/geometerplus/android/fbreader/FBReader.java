@@ -187,7 +187,8 @@ public final class FBReader extends ZLAndroidActivity {
 		
 		fbReader.addAction(ActionCode.SHOW_DIALOG_TOC, new ShowDialogTOCAction(this, fbReader));
 		
-		if ((screen_width == 480) && (screen_heght == 800)) {
+		if (((screen_width == 480) && (screen_heght == 800)) ||
+			((screen_width == 800) && (screen_heght == 480))) {
 			fbReader.addAction(ActionCode.SHOW_DIALOG_MENU, new ShowDialogMenuActionPhone(this, fbReader));
     	} else {
     		fbReader.addAction(ActionCode.SHOW_DIALOG_MENU, new ShowDialogMenuAction(this, fbReader));
@@ -531,6 +532,10 @@ public final class FBReader extends ZLAndroidActivity {
 	private void addMenuItem(Menu menu, String actionId) {
 		final ZLAndroidApplication application = (ZLAndroidApplication)getApplication();
 		application.myMainWindow.addMenuItem(menu, actionId, null, null);
+	}
+
+	public ZLAndroidLibrary getALAndroidLibary() {
+	    return (ZLAndroidLibrary) ZLibrary.Instance();
 	}
 
 	@Override

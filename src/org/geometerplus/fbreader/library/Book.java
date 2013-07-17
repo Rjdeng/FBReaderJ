@@ -58,7 +58,7 @@ import com.onyx.android.sdk.data.util.RefValue;
 
 public class Book {
     private static final String TAG = "Book";
-    
+
 	public static Book getById(long bookId) {
 		final Book book = BooksDatabase.Instance().loadBook(bookId);
 		if (book == null) {
@@ -209,7 +209,7 @@ public class Book {
 			setTitle(index > 0 ? fileName.substring(0, index) : fileName);
 		}
 		final String demoPathPrefix = Paths.mainBookDirectory() + "/Demos/";
-		if (File.getPath().startsWith(demoPathPrefix)) {
+		if (File.getPhysicalFile().getPath().startsWith(demoPathPrefix)) {
 			final String demoTag = LibraryUtil.resource().getResource("demo").getValue();
 			setTitle(getTitle() + " (" + demoTag + ")");
 			addTag(demoTag);
@@ -429,7 +429,8 @@ public class Book {
 	    }
 	    final BooksDatabase database = BooksDatabase.Instance();
 	    database.executeAsATransaction(new Runnable() {
-	        public void run() {
+	        @Override
+            public void run() {
 	            if (myId >= 0) {
 	                final FileInfoSet fileInfos = new FileInfoSet(File);
 	                database.updateBookInfo(myId, fileInfos.getId(File), myEncoding, myLanguage, myTitle);
@@ -452,7 +453,7 @@ public class Book {
 	    });
 
 	    try {
-	        OnyxMetadata data = OnyxMetadata.createFromFile(File.getPath());
+	        OnyxMetadata data = OnyxMetadata.createFromFile(File.getPhysicalFile().getPath());
 	        if (data != null) {
 	            String md5 = data.getMD5();
 
@@ -528,7 +529,7 @@ public class Book {
 	                        final int maxWidth = maxHeight * 2 / 3;
 	                        final Bitmap cover = image_data.getBitmap(2 * maxWidth, 2 * maxHeight);
 	                        if (cover != null) {
-	                            Log.d(TAG, "cover bitmap is not null"); 
+	                            Log.d(TAG, "cover bitmap is not null");
 	                            if (!OnyxCmsCenter.insertThumbnail(ctx, data, cover)) {
 	                                Log.d(TAG, "insert thumbnail failed");
 	                            }
@@ -537,7 +538,7 @@ public class Book {
 	                            }
 	                        }
 	                        else {
-	                            Log.d(TAG, "cover bitmap is null"); 
+	                            Log.d(TAG, "cover bitmap is null");
 	                        }
 	                    }
 	                }

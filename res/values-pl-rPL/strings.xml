@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="empty_string"/>
+    <string name="slash">/</string>
+    <string name="hint"/>
+    <string name="did_not_find_the_dictionary">Nie znaleziono słownika</string>
+    <string name="title">Wtyczka TTS</string>
+    <string name="initializing">Uruchamianie</string>
+    <string name="failure">Uruchamianie nie powiodło się</string>
+    <string name="speak_menu_item">Mów</string>
+    <string name="no_tts_installed">Nie można się połączyć z silnikiem TTS urządzenia.</string>
+    <string name="initialization_error">Nie można odczytać danych książki z FBReadera.</string>
+    <string name="language_is_not_set">Język książki nie został ustawiony. Otwieranie książki w języku %0.</string>
+    <string formatted="false" name="no_data_for_language">Brak danych TTS dla języka %0. Odczytywanie książki w języku %1.</string>
+    <string name="speed">Oceń:</string>
+    <string name="settings_page_margin">Margines strony</string>
+    <string name="settings_set_page_margin">Ustaw margines strony</string>
+    <string name="settings_set_dictionary">Ustaw słownik</string>
+    <string name="settings_set_dictionary_title">Słownik</string>
+</resources>

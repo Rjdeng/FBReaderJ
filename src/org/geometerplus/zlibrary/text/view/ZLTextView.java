@@ -37,6 +37,7 @@ import org.geometerplus.zlibrary.text.view.style.ZLTextStyleCollection;
 import org.geometerplus.zlibrary.ui.android.library.ZLAndroidLibrary;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.onyx.android.sdk.data.cms.OnyxBookProgress;
 import com.onyx.android.sdk.data.cms.OnyxCmsCenter;
@@ -304,7 +305,7 @@ public abstract class ZLTextView extends ZLTextViewBase {
 			return mySelection.getCursorInMovementPoint();
 		}
 
-		if (cursor == ZLTextSelectionCursor.Left) {	
+		if (cursor == ZLTextSelectionCursor.Left) {
 			if (mySelection.hasAPartBeforePage(page)) {
 				return null;
 			}
@@ -475,15 +476,18 @@ public abstract class ZLTextView extends ZLTextViewBase {
 	{
 	    final FBReaderApp fbReader = (FBReaderApp)FBReaderApp.Instance();
 	    Context ctx = ((ZLAndroidLibrary)ZLAndroidLibrary.Instance()).getActivity();
-	    if (fbReader.Model != null && fbReader.Model.Book != null && fbReader.Model.Book.File != null) {            
-	        OnyxMetadata metadata = OnyxCmsCenter.getMetadata(ctx, fbReader.Model.Book.File.getPath());
+	    if (fbReader.Model != null && fbReader.Model.Book != null && fbReader.Model.Book.File != null) {
+	        OnyxMetadata metadata = OnyxCmsCenter.getMetadata(ctx, fbReader.Model.Book.File.getPhysicalFile().getPath());
+
+	        Log.i("ZLTextView", "path: "+fbReader.Model.Book.File.getPhysicalFile().getPath());
+
 	        if (metadata != null) {
 	            OnyxBookProgress progress = new OnyxBookProgress(fbReader.getTextView().pagePosition().Current, fbReader.getTextView().pagePosition().Total);
 	            metadata.setProgress(progress);
 	            OnyxCmsCenter.updateMetadata(ctx, metadata);
 	        }
 	        else {
-	            metadata = OnyxMetadata.createFromFile(fbReader.Model.Book.File.getPath());
+	            metadata = OnyxMetadata.createFromFile(fbReader.Model.Book.File.getPhysicalFile().getPath());
 	            OnyxBookProgress progress = new OnyxBookProgress(fbReader.getTextView().pagePosition().Current, fbReader.getTextView().pagePosition().Total);
 	            metadata.setProgress(progress);
 	            OnyxCmsCenter.insertMetadata(ctx, metadata);
@@ -509,7 +513,8 @@ public abstract class ZLTextView extends ZLTextViewBase {
 
 	public abstract int scrollbarType();
 
-	public final boolean isScrollbarShown() {
+	@Override
+    public final boolean isScrollbarShown() {
 		return scrollbarType() == SCROLLBAR_SHOW || scrollbarType() == SCROLLBAR_SHOW_AS_PROGRESS;
 	}
 
@@ -1627,9 +1632,9 @@ public abstract class ZLTextView extends ZLTextViewBase {
 			}
 		}
 	}
-	
+
 	public int getPageNumber(int paragraphsNumber) {
-	    
+
         final float factor = 1.0f / computeCharsPerPage();
         final float pages = paragraphsNumber * factor;
         return Math.max((int)(pages + 1.0f - 0.5f * factor), 1);
