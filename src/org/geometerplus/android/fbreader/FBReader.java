@@ -59,6 +59,7 @@ import android.widget.RelativeLayout;
 
 import com.onyx.android.sdk.data.cms.OnyxCmsCenter;
 import com.onyx.android.sdk.data.cms.OnyxHistoryEntry;
+import com.onyx.android.sdk.data.cms.OnyxHistoryEntryHelper;
 import com.onyx.android.sdk.ui.SelectionPopupMenu;
 import com.onyx.android.sdk.ui.dialog.DialogSearchView;
 
@@ -73,10 +74,10 @@ public final class FBReader extends ZLAndroidActivity {
 	public static final int RESULT_REPAINT = RESULT_FIRST_USER + 1;
 	public static final int RESULT_RELOAD_BOOK = RESULT_FIRST_USER + 2;
 	
-	public OnyxHistoryEntry mOnyxHistoryEntry = null;
 	private int myFullScreenFlag;
 	private FBReaderApp fbReader = null;
-
+	private int mScreenWidth = 0;
+	private int mScreenHeght = 0;
 	private static final String PLUGIN_ACTION_PREFIX = "___";
 	private final List<PluginApi.ActionInfo> myPluginActions =
 		new LinkedList<PluginApi.ActionInfo>();
@@ -130,13 +131,13 @@ public final class FBReader extends ZLAndroidActivity {
 			}
 		};
 	}
-
+ 
 	@Override
 	public void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 
-		int screen_width = this.getWindowManager().getDefaultDisplay().getWidth();
-    	int screen_heght = this.getWindowManager().getDefaultDisplay().getHeight();
+		mScreenWidth = this.getWindowManager().getDefaultDisplay().getWidth();
+    	mScreenHeght = this.getWindowManager().getDefaultDisplay().getHeight();
     	
 		final FBReaderApp fbReader = (FBReaderApp)FBReaderApp.Instance();
 		final ZLAndroidLibrary zlibrary = (ZLAndroidLibrary)ZLibrary.Instance();
@@ -191,8 +192,8 @@ public final class FBReader extends ZLAndroidActivity {
 		
 		fbReader.addAction(ActionCode.SHOW_DIALOG_TOC, new ShowDialogTOCAction(this, fbReader));
 		
-		if (((screen_width == 480) && (screen_heght == 800)) ||
-			((screen_width == 800) && (screen_heght == 480))) {
+		if (((mScreenWidth == 480) && (mScreenHeght == 800)) ||
+			((mScreenWidth == 800) && (mScreenHeght == 480))) {
 			fbReader.addAction(ActionCode.SHOW_DIALOG_MENU, new ShowDialogMenuActionPhone(this, fbReader));
     	} else {
     		fbReader.addAction(ActionCode.SHOW_DIALOG_MENU, new ShowDialogMenuAction(this, fbReader));
@@ -201,11 +202,8 @@ public final class FBReader extends ZLAndroidActivity {
 		fbReader.addAction(ActionCode.ADD_BOOKMARK, new AddBookmarkAction(this, fbReader));
 		fbReader.addAction(ActionCode.SHOW_DIALOG_BOOKMARKS, new ShowDialogBookmarksAction(this, fbReader));
 		
-		if (((screen_width == 480) && (screen_heght == 800)) || ((screen_width == 800) && (screen_heght == 480))) {
-			mOnyxHistoryEntry = new OnyxHistoryEntry();
-			mOnyxHistoryEntry.setStartTime(new Date());
-			OnyxCmsCenter.insertHistory(this, mOnyxHistoryEntry);
-			System.out.println("ID = "+mOnyxHistoryEntry.getId());
+		if (((mScreenWidth == 480) && (mScreenHeght == 800)) || ((mScreenWidth == 800) && (mScreenHeght == 480))) {
+			OnyxHistoryEntryHelper.recordStartReading(this);
 		}
 	}
 
@@ -422,10 +420,8 @@ public final class FBReader extends ZLAndroidActivity {
 	protected void onDestroy()
 	{
 	    ShowDialogMenuAction.shutdownTts();
-	    
-	    if (mOnyxHistoryEntry != null) {
-	    	mOnyxHistoryEntry.setEndTime(new Date());
-	    	OnyxCmsCenter.updateHistory(this, mOnyxHistoryEntry);
+	    if (((mScreenWidth == 480) && (mScreenHeght == 800)) || ((mScreenWidth == 800) && (mScreenHeght == 480))) {
+	    	OnyxHistoryEntryHelper.recordFinishReading(this);
 	    }
 	    super.onDestroy();
 	}
