@@ -77,7 +77,7 @@ public final class FBReader extends ZLAndroidActivity {
 	private int myFullScreenFlag;
 	private FBReaderApp fbReader = null;
 	private int mScreenWidth = 0;
-	private int mScreenHeght = 0;
+	private int mScreenHeight = 0;
 	private static final String PLUGIN_ACTION_PREFIX = "___";
 	private final List<PluginApi.ActionInfo> myPluginActions =
 		new LinkedList<PluginApi.ActionInfo>();
@@ -137,7 +137,7 @@ public final class FBReader extends ZLAndroidActivity {
 		super.onCreate(icicle);
 
 		mScreenWidth = this.getWindowManager().getDefaultDisplay().getWidth();
-    	mScreenHeght = this.getWindowManager().getDefaultDisplay().getHeight();
+    	mScreenHeight = this.getWindowManager().getDefaultDisplay().getHeight();
     	
 		final FBReaderApp fbReader = (FBReaderApp)FBReaderApp.Instance();
 		final ZLAndroidLibrary zlibrary = (ZLAndroidLibrary)ZLibrary.Instance();
@@ -192,8 +192,7 @@ public final class FBReader extends ZLAndroidActivity {
 		
 		fbReader.addAction(ActionCode.SHOW_DIALOG_TOC, new ShowDialogTOCAction(this, fbReader));
 		
-		if (((mScreenWidth == 480) && (mScreenHeght == 800)) ||
-			((mScreenWidth == 800) && (mScreenHeght == 480))) {
+		if (isPhoneStyle()) {
 			fbReader.addAction(ActionCode.SHOW_DIALOG_MENU, new ShowDialogMenuActionPhone(this, fbReader));
     	} else {
     		fbReader.addAction(ActionCode.SHOW_DIALOG_MENU, new ShowDialogMenuAction(this, fbReader));
@@ -202,7 +201,7 @@ public final class FBReader extends ZLAndroidActivity {
 		fbReader.addAction(ActionCode.ADD_BOOKMARK, new AddBookmarkAction(this, fbReader));
 		fbReader.addAction(ActionCode.SHOW_DIALOG_BOOKMARKS, new ShowDialogBookmarksAction(this, fbReader));
 		
-		if (((mScreenWidth == 480) && (mScreenHeght == 800)) || ((mScreenWidth == 800) && (mScreenHeght == 480))) {
+		if (isPhoneStyle()) {
 			OnyxHistoryEntryHelper.recordStartReading(this);
 		}
 	}
@@ -420,7 +419,7 @@ public final class FBReader extends ZLAndroidActivity {
 	protected void onDestroy()
 	{
 	    ShowDialogMenuAction.shutdownTts();
-	    if (((mScreenWidth == 480) && (mScreenHeght == 800)) || ((mScreenWidth == 800) && (mScreenHeght == 480))) {
+	    if (isPhoneStyle()) {
 	    	OnyxHistoryEntryHelper.recordFinishReading(this);
 	    }
 	    super.onDestroy();
@@ -439,6 +438,11 @@ public final class FBReader extends ZLAndroidActivity {
 		return super.onSearchRequested();
 	}
 
+	public boolean isPhoneStyle()
+    {
+        return (mScreenWidth == 480 && mScreenHeight == 800) || (mScreenHeight == 480 && mScreenWidth == 800);
+    }
+	
 	private SelectionPopupMenu mSelectionPopupMenu = null;
 	public void showSelectionPanel() {
 	    final FBReaderApp fbReader = (FBReaderApp)FBReaderApp.Instance();
