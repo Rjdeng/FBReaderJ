@@ -20,6 +20,7 @@
 package org.geometerplus.android.fbreader;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -56,6 +57,8 @@ import android.view.Menu;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
+import com.onyx.android.sdk.data.cms.OnyxCmsCenter;
+import com.onyx.android.sdk.data.cms.OnyxHistoryEntry;
 import com.onyx.android.sdk.ui.SelectionPopupMenu;
 import com.onyx.android.sdk.ui.dialog.DialogSearchView;
 
@@ -70,6 +73,7 @@ public final class FBReader extends ZLAndroidActivity {
 	public static final int RESULT_REPAINT = RESULT_FIRST_USER + 1;
 	public static final int RESULT_RELOAD_BOOK = RESULT_FIRST_USER + 2;
 	
+	public OnyxHistoryEntry mOnyxHistoryEntry = null;
 	private int myFullScreenFlag;
 	private FBReaderApp fbReader = null;
 
@@ -196,6 +200,13 @@ public final class FBReader extends ZLAndroidActivity {
 		
 		fbReader.addAction(ActionCode.ADD_BOOKMARK, new AddBookmarkAction(this, fbReader));
 		fbReader.addAction(ActionCode.SHOW_DIALOG_BOOKMARKS, new ShowDialogBookmarksAction(this, fbReader));
+		
+		if (((screen_width == 480) && (screen_heght == 800)) || ((screen_width == 800) && (screen_heght == 480))) {
+			mOnyxHistoryEntry = new OnyxHistoryEntry();
+			mOnyxHistoryEntry.setStartTime(new Date());
+			OnyxCmsCenter.insertHistory(this, mOnyxHistoryEntry);
+			System.out.println("ID = "+mOnyxHistoryEntry.getId());
+		}
 	}
 
 	@Override
@@ -412,6 +423,10 @@ public final class FBReader extends ZLAndroidActivity {
 	{
 	    ShowDialogMenuAction.shutdownTts();
 	    
+	    if (mOnyxHistoryEntry != null) {
+	    	mOnyxHistoryEntry.setEndTime(new Date());
+	    	OnyxCmsCenter.updateHistory(this, mOnyxHistoryEntry);
+	    }
 	    super.onDestroy();
 	}
 
