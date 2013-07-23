@@ -60,6 +60,7 @@ import android.widget.RelativeLayout;
 import com.onyx.android.sdk.data.cms.OnyxCmsCenter;
 import com.onyx.android.sdk.data.cms.OnyxHistoryEntry;
 import com.onyx.android.sdk.data.cms.OnyxHistoryEntryHelper;
+import com.onyx.android.sdk.data.cms.OnyxMetadata;
 import com.onyx.android.sdk.ui.SelectionPopupMenu;
 import com.onyx.android.sdk.ui.dialog.DialogSearchView;
 
@@ -202,7 +203,14 @@ public final class FBReader extends ZLAndroidActivity {
 		fbReader.addAction(ActionCode.SHOW_DIALOG_BOOKMARKS, new ShowDialogBookmarksAction(this, fbReader));
 		
 		if (isPhoneStyle()) {
-			OnyxHistoryEntryHelper.recordStartReading(this);
+			if (fbReader.Model != null && fbReader.Model.Book != null && fbReader.Model.Book.File != null) {
+				String md5 = null;
+		        OnyxMetadata metadata = OnyxCmsCenter.getMetadata(this, fbReader.Model.Book.File.getPhysicalFile().getPath());
+		        if (metadata != null) {
+		        	md5 = metadata.getMD5();
+		        }
+		        OnyxHistoryEntryHelper.recordStartReading(this, md5);
+			}
 		}
 	}
 
