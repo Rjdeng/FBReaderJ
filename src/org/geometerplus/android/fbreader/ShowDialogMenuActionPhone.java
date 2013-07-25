@@ -36,6 +36,7 @@ import android.content.pm.ActivityInfo;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import com.onyx.android.sdk.reader.DocPagingMode;
 import com.onyx.android.sdk.tts.OnyxTtsSpeaker;
 import com.onyx.android.sdk.ui.data.DirectoryItem;
 import com.onyx.android.sdk.ui.dialog.DialogDirectory;
@@ -566,6 +567,27 @@ public class ShowDialogMenuActionPhone extends FBAndroidAction
             @Override
             public boolean canChangeFontFace() {
             	return true;
+            }
+            
+            @Override
+            public ArrayList<DocPagingMode> getReadingModeSupportList()
+            {
+                ArrayList<DocPagingMode> modes = new ArrayList<DocPagingMode>();
+                modes.add(DocPagingMode.Hard_Pages);
+                return modes;
+            }
+
+            @Override
+            public DocPagingMode getReadingMode()
+            {
+                return DocPagingMode.Hard_Pages;
+            }
+
+            @Override
+            public void setReadingMode(DocPagingMode mode)
+            {
+                // TODO Auto-generated method stub
+                
             }
         };
 

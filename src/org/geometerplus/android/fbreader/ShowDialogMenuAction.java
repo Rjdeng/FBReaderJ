@@ -37,6 +37,7 @@ import android.content.pm.ActivityInfo;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import com.onyx.android.sdk.reader.DocPagingMode;
 import com.onyx.android.sdk.tts.OnyxTtsSpeaker;
 import com.onyx.android.sdk.ui.data.DirectoryItem;
 import com.onyx.android.sdk.ui.dialog.DialogDirectory;
@@ -596,6 +597,27 @@ public class ShowDialogMenuAction extends FBAndroidAction
 				// TODO Auto-generated method stub
 				
 			}
+
+            @Override
+            public ArrayList<DocPagingMode> getReadingModeSupportList()
+            {
+                ArrayList<DocPagingMode> modes = new ArrayList<DocPagingMode>();
+                modes.add(DocPagingMode.Hard_Pages);
+                return modes;
+            }
+
+            @Override
+            public DocPagingMode getReadingMode()
+            {
+                return DocPagingMode.Hard_Pages;
+            }
+
+            @Override
+            public void setReadingMode(DocPagingMode mode)
+            {
+                // TODO Auto-generated method stub
+                
+            }
         };
 
         sDialogReaderMenu = new DialogReaderMenu(BaseActivity, menu_handler);
