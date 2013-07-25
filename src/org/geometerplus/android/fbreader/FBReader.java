@@ -19,8 +19,10 @@
 
 package org.geometerplus.android.fbreader;
 
+import java.io.File;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -58,8 +60,9 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.onyx.android.sdk.data.cms.OnyxCmsCenter;
-import com.onyx.android.sdk.data.cms.OnyxHistoryEntry;
 import com.onyx.android.sdk.data.cms.OnyxHistoryEntryHelper;
+import com.onyx.android.sdk.data.cms.OnyxMetadata;
+import com.onyx.android.sdk.data.util.FileUtil;
 import com.onyx.android.sdk.ui.SelectionPopupMenu;
 import com.onyx.android.sdk.ui.dialog.DialogSearchView;
 
@@ -202,7 +205,15 @@ public final class FBReader extends ZLAndroidActivity {
 		fbReader.addAction(ActionCode.SHOW_DIALOG_BOOKMARKS, new ShowDialogBookmarksAction(this, fbReader));
 		
 		if (isPhoneStyle()) {
-			OnyxHistoryEntryHelper.recordStartReading(this);
+			if (fbReader.Model != null && fbReader.Model.Book != null && fbReader.Model.Book.File != null) {
+				String md5 = null;
+				try {
+					md5 = FileUtil.computeMD5(new File(fbReader.Model.Book.File.getPhysicalFile().getPath()));
+					OnyxHistoryEntryHelper.recordStartReading(this, md5);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
